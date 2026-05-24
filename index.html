@@ -278,22 +278,40 @@ onAuthStateChanged(auth, async (user) => {
 
 const cards = document.querySelectorAll(".photo-card");
 
+import {
+
+  deleteDoc,
+  getDoc
+
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
 cards.forEach(card => {
 
   card.addEventListener("click", async () => {
 
     const id = card.dataset.id;
 
-    await setDoc(doc(db,"selectedPhotos",id),{
+    const ref = doc(db,"selectedPhotos",id);
 
-      selected:true
+    const snap = await getDoc(ref);
 
-    });
+    if(snap.exists()){
+
+      await deleteDoc(ref);
+
+    } else {
+
+      await setDoc(ref,{
+
+        selected:true
+
+      });
+
+    }
 
   });
 
 });
-
 cards.forEach(card => {
 
   const id = card.dataset.id;
